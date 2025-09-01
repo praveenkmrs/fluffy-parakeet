@@ -1,0 +1,49 @@
+spring:
+  application:
+    name: shopping-cart
+  data:
+    mongodb:
+      host: ${MONGO_HOST:localhost}
+      port: ${MONGO_PORT:27017}
+      database: ${MONGO_DATABASE:shopping-cart-dev}
+
+server:
+  port: 8080
+
+# Service configurations for development
+services:
+  payment:
+    type: stub
+    config:
+      success-rate: 90
+      response-delay: 200
+      test-scenarios: true
+  notification:
+    type: stub
+    config:
+      log-to-console: true
+      save-to-file: false
+      simulate-failures: 5
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:myDevSecretKeyForDevelopmentEnvironment123456789}
+  expiration: 86400000 # 24 hours
+
+# Actuator configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,env
+  endpoint:
+    health:
+      show-details: when-authorized
+
+# Logging configuration
+logging:
+  level:
+    pk.ai.shopping_cart: INFO
+    org.springframework.security: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%level] %logger{36} - %msg%n"

@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: shopping-cart-test
+  data:
+    mongodb:
+      # Use embedded MongoDB for unit tests
+      host: localhost
+      port: 27017
+      database: shopping-cart-test
+
+server:
+  port: 0  # Random port for testing
+
+# Service configurations for testing (use stubs)
+services:
+  payment:
+    type: stub
+    config:
+      success-rate: 100
+      response-delay: 0
+      test-scenarios: true
+  notification:
+    type: stub
+    config:
+      log-to-console: false
+      save-to-file: false
+      simulate-failures: 0
+
+# JWT Configuration for testing
+jwt:
+  secret: testSecretKeyForUnitTestingThatIsLongEnoughForHS512Algorithm123456789
+  expiration: 3600000 # 1 hour for testing
+
+# Logging configuration for tests
+logging:
+  level:
+    pk.ai.shopping_cart: DEBUG
+    org.springframework.test: DEBUG
+    org.springframework.security: WARN
+    org.mongodb: WARN
+    
+# Disable MongoDB auto-configuration for unit tests when needed
+management:
+  endpoints:
+    enabled-by-default: false

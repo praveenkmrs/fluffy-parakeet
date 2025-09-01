@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: shopping-cart
+  data:
+    mongodb:
+      host: ${MONGO_HOST}
+      port: ${MONGO_PORT:27017}
+      database: ${MONGO_DATABASE}
+      username: ${MONGO_USERNAME}
+      password: ${MONGO_PASSWORD}
+
+server:
+  port: 8080
+
+# Service configurations for production
+services:
+  payment:
+    type: external
+    provider: stripe
+    config:
+      api-key: ${STRIPE_API_KEY}
+      webhook-secret: ${STRIPE_WEBHOOK_SECRET}
+      timeout: 30000
+  notification:
+    type: external
+    providers:
+      email: sendgrid
+      sms: twilio
+    config:
+      sendgrid-api-key: ${SENDGRID_API_KEY}
+      twilio-account-sid: ${TWILIO_ACCOUNT_SID}
+      twilio-auth-token: ${TWILIO_AUTH_TOKEN}
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: 3600000 # 1 hour for production
+
+# Actuator configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: never
+
+# Logging configuration
+logging:
+  level:
+    pk.ai.shopping_cart: WARN
+    org.springframework.security: ERROR
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%level] %logger{36} - %msg%n"
